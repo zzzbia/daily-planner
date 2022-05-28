@@ -9,7 +9,7 @@ const businessHours = currentDay.format("hh:mm A");
 const startOfWorkDayHour = 9;
 
 // how many hours do you want to work
-const hoursToWork = 24;
+const hoursToWork = 9;
 
 $(document).on("click", ".save-btn", function () {
 	const id = $(this).attr("id");
