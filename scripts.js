@@ -9,7 +9,7 @@ const businessHours = currentDay.format("hh:mm A");
 const startOfWorkDayHour = 9;
 
 // how many hours do you want to work
-const hoursToWork = 24;
+const hoursToWork = 9;
 
 $(document).on("click", ".save-btn", function () {
 	const id = $(this).attr("id");
@@ -69,12 +69,18 @@ for (i = 0; i < hoursToWork; i++) {
 	saveButton.appendTo(saveColumn);
 	saveColumn.appendTo(tableRow);
 
+	// if the current hour is set to the work hour
+	// then the input column color will be teal (table-info)
 	if (workHour.format("hh a") == currentHour.format("hh a")) {
 		inputColumn.addClass("table-info");
 	}
 	if (workHour.isBefore(currentDay, "hour")) {
 		saveButton.addClass("disabled");
 		taskInput.prop({ readonly: true });
+	}
+
+	if (workHour.isAfter(currentDay, "hour")) {
+		inputColumn.addClass("table-success");
 	}
 
 	//appending table row to table content
