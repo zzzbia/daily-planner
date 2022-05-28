@@ -9,7 +9,7 @@ const businessHours = currentDay.format("hh:mm A");
 const startOfWorkDayHour = 9;
 
 // how many hours do you want to work
-const hoursToWork = 9;
+const hoursToWork = 24;
 
 $(document).on("click", ".save-btn", function () {
 	const id = $(this).attr("id");
@@ -27,7 +27,7 @@ for (i = 0; i < hoursToWork; i++) {
 	const tableRow = $(document.createElement("tr"));
 	const tableHours = $(document.createElement("th"));
 	const inputColumn = $(document.createElement("td"));
-	const taskInput = $(document.createElement("input"));
+	const taskInput = $(document.createElement("textarea"));
 	const saveColumn = $(document.createElement("td"));
 	const saveButton = $(document.createElement("btn"));
 	const saveIcon = $(document.createElement("i"));
@@ -48,7 +48,7 @@ for (i = 0; i < hoursToWork; i++) {
 	inputColumn.prop({ colspan: 2 });
 	inputColumn.addClass("table-active");
 	taskInput.addClass("form-control");
-	taskInput.attr({ id: "task--" + i });
+	taskInput.attr({ id: "task--" + i, rows: 3 });
 
 	taskInput.appendTo(inputColumn);
 
@@ -73,14 +73,17 @@ for (i = 0; i < hoursToWork; i++) {
 	// then the input column color will be teal (table-info)
 	if (workHour.format("hh a") == currentHour.format("hh a")) {
 		inputColumn.addClass("table-info");
+		taskInput.attr({ placeholder: "Current hour" });
 	}
 	if (workHour.isBefore(currentDay, "hour")) {
 		saveButton.addClass("disabled");
 		taskInput.prop({ readonly: true });
+		taskInput.attr({ placeholder: "Past" });
 	}
 
 	if (workHour.isAfter(currentDay, "hour")) {
 		inputColumn.addClass("table-success");
+		taskInput.attr({ placeholder: "Add task" });
 	}
 
 	//appending table row to table content
