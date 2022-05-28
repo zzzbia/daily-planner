@@ -3,21 +3,28 @@ currentDay = moment();
 let today = currentDay.format("MMMM Do YYYY");
 $("#currentDay").text(today);
 
-let hour = currentDay.format("H HH");
+const hour = currentDay.startOf("hour");
+const businessHours = currentDay.format("hh:mm A");
+
+// in 24 hour clock -> when do you start working?
+const startOfWorkDayHour = 9;
+
+// how many hours do you want to work
+const hoursToWork = 9;
 
 $(document).on("click", ".save-btn", function () {
 	const id = $(this).attr("id");
+	// ["task", "3"];
 	const index = id.split("--")[1];
 	const task = $("#task--" + index).val();
-
-	if (task !== "") {
-		localStorage.setItem(`${moment().format("MMMM Do YYYY")}--${index}`, task);
-	}
+	localStorage.setItem(`${currentDay.format("MMMM-Do-YYYY")}--${index}`, task);
 });
 
 const tableContent = $("#tableContent");
 
-for (i = 0; i < 24; i++) {
+// 10 for 10 hour work day + 1
+// workday to be from 9am -6pm
+for (i = 0; i < hoursToWork; i++) {
 	const tableRow = $(document.createElement("tr"));
 	const tableHours = $(document.createElement("th"));
 	const inputColumn = $(document.createElement("td"));
@@ -26,12 +33,14 @@ for (i = 0; i < 24; i++) {
 	const saveButton = $(document.createElement("btn"));
 	const saveIcon = $(document.createElement("i"));
 
+	const workHour = moment().set("hour", i + startOfWorkDayHour);
+
 	let existingTask = localStorage.getItem(
-		`${moment().format("MMMM Do YYYY")}--${i}`
+		`${currentDay.format("MMMM-Do-YYYY")}--${i}`
 	);
 
 	// append table hours to the table row with the hour
-	tableHours.text(i);
+	tableHours.text(workHour.format("h:00 A"));
 	tableHours.prop({ scope: "row" });
 	tableHours.appendTo(tableRow);
 
@@ -40,6 +49,7 @@ for (i = 0; i < 24; i++) {
 	inputColumn.addClass("table-active");
 	taskInput.addClass("form-control");
 	taskInput.attr({ id: "task--" + i });
+
 	taskInput.appendTo(inputColumn);
 
 	if (existingTask !== null) {
@@ -58,6 +68,11 @@ for (i = 0; i < 24; i++) {
 	saveIcon.appendTo(saveButton);
 	saveButton.appendTo(saveColumn);
 	saveColumn.appendTo(tableRow);
+
+	if (workHour.isBefore(currentDay, "hour")) {
+		saveButton.addClass("disabled");
+		taskInput.prop({ readonly: true });
+	}
 
 	//appending table row to table content
 	tableRow.appendTo(tableContent);
