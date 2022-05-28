@@ -28,7 +28,7 @@
 
 
 ## Deployed Link
-
+- [Try out the Daily Planner!](https://zzzbia.github.io/daily-planner/)
 
 ## 📝 Reference Links
 - [W3 Schools Append Child](https://www.w3schools.com/jsref/met_node_appendchild.asp)

@@ -3,17 +3,17 @@ currentDay = moment();
 let today = currentDay.format("MMMM Do YYYY");
 $("#currentDay").text(today);
 
-const hour = currentDay.startOf("hour");
 const businessHours = currentDay.format("hh:mm A");
 
 // in 24 hour clock -> when do you start working?
 const startOfWorkDayHour = 9;
 
 // how many hours do you want to work
-const hoursToWork = 9;
+const hoursToWork = 24;
 
 $(document).on("click", ".save-btn", function () {
 	const id = $(this).attr("id");
+	// splitting by -- to set an index
 	// ["task", "3"];
 	const index = id.split("--")[1];
 	const task = $("#task--" + index).val();
@@ -22,7 +22,6 @@ $(document).on("click", ".save-btn", function () {
 
 const tableContent = $("#tableContent");
 
-// 10 for 10 hour work day + 1
 // workday to be from 9am -6pm
 for (i = 0; i < hoursToWork; i++) {
 	const tableRow = $(document.createElement("tr"));
@@ -34,6 +33,7 @@ for (i = 0; i < hoursToWork; i++) {
 	const saveIcon = $(document.createElement("i"));
 
 	const workHour = moment().set("hour", i + startOfWorkDayHour);
+	const currentHour = moment().startOf("hour");
 
 	let existingTask = localStorage.getItem(
 		`${currentDay.format("MMMM-Do-YYYY")}--${i}`
@@ -69,6 +69,9 @@ for (i = 0; i < hoursToWork; i++) {
 	saveButton.appendTo(saveColumn);
 	saveColumn.appendTo(tableRow);
 
+	if (workHour.format("hh a") == currentHour.format("hh a")) {
+		inputColumn.addClass("table-info");
+	}
 	if (workHour.isBefore(currentDay, "hour")) {
 		saveButton.addClass("disabled");
 		taskInput.prop({ readonly: true });
